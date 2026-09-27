@@ -162,8 +162,6 @@ export default function Home() {
     };
   }, [client, mergeRemoteChats]);
 
-  // История хранится только локально, поэтому при открытии чата
-  // подтягиваем недостающие сообщения через getChatHistory (один раз на чат).
   useEffect(() => {
     if (!client || !activeChat) return;
 

@@ -15,7 +15,6 @@ export function useChats(client: GreenApiClient | null) {
     [chats, activeChatId],
   );
 
-  // Миграция: назначаем цвет чатам, созданным до появления colorIndex.
   useEffect(() => {
     if (chats.some((chat) => chat.colorIndex === undefined)) {
       setChats((current) =>
@@ -129,7 +128,6 @@ export function useChats(client: GreenApiClient | null) {
       const merged: Chat[] = [];
 
       for (const remote of remoteChats) {
-        // WhatsApp-инстансы отдают `id` (number@c.us), Telegram/MAX — `chatId` (числовой).
         const chatId = (remote.chatId ?? remote.id)?.trim();
         if (!chatId || seen.has(chatId)) continue;
         seen.add(chatId);
