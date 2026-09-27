@@ -44,6 +44,12 @@ export function ChatWindow({ chat, messages, sending, error, onSend }: Props) {
   const visibleError = error && error !== dismissedError ? error : null;
 
   useEffect(() => {
+    if (!visibleError) return;
+    const timer = window.setTimeout(() => setDismissedError(visibleError), 8000);
+    return () => window.clearTimeout(timer);
+  }, [visibleError]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages.length, chat?.id]);
 
