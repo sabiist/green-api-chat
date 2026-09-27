@@ -42,7 +42,7 @@ function ChatAvatar({ chat, active }: { chat: Chat; active: boolean }) {
 
 export function ChatList({ chats, activeChatId, collapsed, onSelect, onRename, onDelete }: Props) {
   if (!chats.length) {
-    return (
+    return collapsed ? null : (
       <div className="rounded-lg border border-dashed bg-white p-6 text-sm text-slate-500">
         Чатов пока нет
       </div>
