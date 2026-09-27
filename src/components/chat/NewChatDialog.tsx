@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { MessageCirclePlus } from 'lucide-react';
 
 import {
   Dialog,
@@ -9,7 +10,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { inputClass, labelClass, primaryButtonClass } from '@/lib/controls';
-import { ChatPlusIcon } from '@/components/chat/icons';
 
 type Props = {
   onCreate: (chatId: string, title: string) => Promise<void> | void;
@@ -48,7 +48,7 @@ export function NewChatDialog({ onCreate }: Props) {
         aria-label="Создать чат"
         className="bg-primary hover:bg-primary-dark inline-flex size-12 items-center justify-center rounded-full text-white shadow-lg transition"
       >
-        <ChatPlusIcon className="size-6" />
+        <MessageCirclePlus className="size-6" aria-hidden="true" />
       </DialogTrigger>
 
       <DialogContent>

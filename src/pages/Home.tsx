@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { ArrowLeftRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 import logoUrl from '@/assets/header-logo.svg';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -8,7 +8,6 @@ import { ChatWindow } from '@/components/chat/ChatWindow';
 import { LoginPanel } from '@/components/chat/LoginPanel';
 import { NewChatDialog } from '@/components/chat/NewChatDialog';
 import { RenameChatDialog } from '@/components/chat/RenameChatDialog';
-import { SwitchInstanceIcon } from '@/components/chat/icons';
 import { useChats } from '@/hooks/useChats';
 import { useCredentials } from '@/hooks/useCredentials';
 import { useGreenApiPolling } from '@/hooks/useGreenApiPolling';
@@ -212,7 +211,7 @@ export default function Home() {
               className="hover:bg-primary-lighter hover:text-primary-dark inline-flex size-10 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-600 transition"
               onClick={() => setConfirmLogoutOpen(true)}
             >
-              <SwitchInstanceIcon className="size-5" />
+              <ArrowLeftRight className="size-5" aria-hidden="true" />
             </button>
             <span className="pointer-events-none absolute top-11 right-0 z-20 rounded-md bg-black px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition group-hover:opacity-100">
               Сменить инстанс

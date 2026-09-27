@@ -1,5 +1,6 @@
+import { EllipsisVertical } from 'lucide-react';
+
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@/components/ui/menu';
-import { DotsIcon } from '@/components/chat/icons';
 import { avatarColorFor } from '@/lib/avatarColors';
 import { menuButtonClass } from '@/lib/controls';
 import { formatDate } from '@/lib/format';
@@ -124,7 +125,7 @@ export function ChatList({ chats, activeChatId, collapsed, onSelect, onRename, o
                     : 'hover:bg-primary-light hover:text-primary-dark text-slate-500',
                 )}
               >
-                <DotsIcon className="size-5" />
+                <EllipsisVertical className="size-5" aria-hidden="true" />
               </MenuTrigger>
               <MenuContent>
                 <MenuItem

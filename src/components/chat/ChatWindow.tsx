@@ -1,9 +1,8 @@
 import { Fragment, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { Check, CheckCheck, Clock, CircleAlert, Info, X } from 'lucide-react';
+import { Check, CheckCheck, Clock, CircleAlert, Info, SendHorizonal, X } from 'lucide-react';
 
 import { avatarColorFor } from '@/lib/avatarColors';
 import { textareaClass } from '@/lib/controls';
-import { SendIcon } from '@/components/chat/icons';
 import { formatDay, formatTime } from '@/lib/format';
 import { cx } from '@/lib/cx';
 import type { Chat, ChatMessage } from '@/types/chat';
@@ -189,7 +188,7 @@ export function ChatWindow({ chat, messages, sending, error, onSend }: Props) {
             type="submit"
             aria-label="Отправить"
           >
-            <SendIcon className="size-4" />
+            <SendHorizonal className="size-4" aria-hidden="true" />
           </button>
         </div>
       </form>
