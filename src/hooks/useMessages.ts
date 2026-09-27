@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { makeId } from '@/lib/utils';
-import type { ChatMessage } from '@/types/chat';
+import { makeId, normalizeOutgoingStatus } from '@/lib/utils';
+import type { ChatHistoryMessage, ChatMessage } from '@/types/chat';
 
 export function useMessages() {
   const [messages, setMessages] = useLocalStorage<Record<string, ChatMessage[]>>('messages', {});
@@ -73,6 +73,43 @@ export function useMessages() {
     [setMessages],
   );
 
+  const mergeHistory = useCallback(
+    (chatId: string, history: ChatHistoryMessage[]) => {
+      setMessages((current) => {
+        const list = current[chatId] ?? [];
+        const knownRemoteIds = new Set(
+          list.map((message) => message.remoteId).filter((id): id is string => Boolean(id)),
+        );
+
+        const restored: ChatMessage[] = [];
+        for (const item of history) {
+          if (!item.idMessage || knownRemoteIds.has(item.idMessage)) continue;
+
+          const text = item.textMessage ?? item.extendedTextMessage?.text ?? '';
+          if (!text.trim()) continue;
+
+          knownRemoteIds.add(item.idMessage);
+          const outgoing = item.type === 'outgoing';
+          restored.push({
+            id: makeId(),
+            chatId,
+            text,
+            direction: outgoing ? 'outgoing' : 'incoming',
+            timestamp: item.timestamp ? item.timestamp * 1000 : Date.now(),
+            status: outgoing ? (normalizeOutgoingStatus(item.statusMessage) ?? 'sent') : undefined,
+            remoteId: item.idMessage,
+          });
+        }
+
+        if (!restored.length) return current;
+
+        const merged = [...list, ...restored].sort((a, b) => a.timestamp - b.timestamp);
+        return { ...current, [chatId]: merged };
+      });
+    },
+    [setMessages],
+  );
+
   return {
     messages,
     appendMessage,
@@ -80,5 +117,6 @@ export function useMessages() {
     addIncomingMessage,
     updateStatusByRemoteId,
     clearChat,
+    mergeHistory,
   };
 }

@@ -1,4 +1,5 @@
 import type {
+  ChatHistoryMessage,
   CheckAccountResponse,
   Credentials,
   DeleteNotificationResponse,
@@ -103,6 +104,17 @@ export class GreenApiClient {
     return this.request<RemoteChat[]>(
       'GET',
       `/getChats/${this.credentials.apiTokenInstance}${query}`,
+    );
+  }
+
+  getChatHistory(chatId: string, count = 50) {
+    return this.request<ChatHistoryMessage[]>(
+      'POST',
+      `/getChatHistory/${this.credentials.apiTokenInstance}`,
+      {
+        chatId,
+        count,
+      },
     );
   }
 

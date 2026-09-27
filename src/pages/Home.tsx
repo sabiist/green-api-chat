@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 import logoUrl from '@/assets/header-logo.svg';
@@ -37,6 +37,7 @@ export default function Home() {
     addIncomingMessage,
     updateStatusByRemoteId,
     clearChat,
+    mergeHistory,
   } = useMessages();
   const {
     sidebarRef,
@@ -52,6 +53,7 @@ export default function Home() {
   const [renamingChat, setRenamingChat] = useState<Chat | null>(null);
   const [deletingChat, setDeletingChat] = useState<Chat | null>(null);
   const [confirmLogoutOpen, setConfirmLogoutOpen] = useState(false);
+  const historyLoadedRef = useRef<Set<string>>(new Set());
 
   const activeMessages = activeChat ? (messages[activeChat.chatId] ?? []) : [];
 
@@ -160,6 +162,30 @@ export default function Home() {
       cancelled = true;
     };
   }, [client, mergeRemoteChats]);
+
+  // История хранится только локально, поэтому при открытии чата
+  // подтягиваем недостающие сообщения через getChatHistory (один раз на чат).
+  useEffect(() => {
+    if (!client || !activeChat) return;
+
+    const chatId = activeChat.chatId;
+    if (historyLoadedRef.current.has(chatId)) return;
+    historyLoadedRef.current.add(chatId);
+
+    let cancelled = false;
+    client
+      .getChatHistory(chatId)
+      .then((history) => {
+        if (!cancelled) mergeHistory(chatId, history);
+      })
+      .catch(() => {
+        historyLoadedRef.current.delete(chatId);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [client, activeChat, mergeHistory]);
 
   const handleLogout = () => {
     setChatError(null);

@@ -28,12 +28,30 @@ export type Chat = {
 };
 
 export type RemoteChat = {
-  id: string;
+  id?: string;
+  chatId?: string;
   name?: string;
   type?: 'user' | 'group' | string;
   archive?: boolean;
   unreadCount?: number;
   newChatId?: string;
+};
+
+export type ChatHistoryMessage = {
+  idMessage?: string;
+  timestamp?: number;
+  type?: 'incoming' | 'outgoing' | string;
+  typeMessage?: string;
+  chatId?: string;
+  textMessage?: string;
+  extendedTextMessage?: {
+    text?: string;
+    description?: string;
+    title?: string;
+  };
+  statusMessage?: string;
+  senderId?: string;
+  senderName?: string;
 };
 
 export type InstanceStateResponse = {
