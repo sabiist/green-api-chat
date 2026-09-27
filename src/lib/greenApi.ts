@@ -4,6 +4,7 @@ import type {
   DeleteNotificationResponse,
   IncomingNotification,
   InstanceStateResponse,
+  RemoteChat,
   SendMessageResponse,
 } from '@/types/chat';
 
@@ -94,6 +95,14 @@ export class GreenApiClient {
       {
         phoneNumber,
       },
+    );
+  }
+
+  getChats(count?: number) {
+    const query = count ? `?count=${count}` : '';
+    return this.request<RemoteChat[]>(
+      'GET',
+      `/getChats/${this.credentials.apiTokenInstance}${query}`,
     );
   }
 

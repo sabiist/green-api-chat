@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 import logoUrl from '@/assets/header-logo.svg';
@@ -28,6 +28,7 @@ export default function Home() {
     removeChat,
     touchChat,
     upsertIncomingChat,
+    mergeRemoteChats,
   } = useChats(client);
   const {
     messages,
@@ -141,6 +142,24 @@ export default function Home() {
     onNotification: handleNotification,
     onError: useCallback((error: unknown) => setChatError(errorMessage(error)), []),
   });
+
+  useEffect(() => {
+    if (!client) return;
+
+    let cancelled = false;
+    client
+      .getChats()
+      .then((remoteChats) => {
+        if (!cancelled) mergeRemoteChats(remoteChats);
+      })
+      .catch((error) => {
+        if (!cancelled) setChatError(errorMessage(error));
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [client, mergeRemoteChats]);
 
   const handleLogout = () => {
     setChatError(null);

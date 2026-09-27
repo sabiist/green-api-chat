@@ -4,7 +4,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { randomAvatarColorIndex } from '@/lib/avatarColors';
 import { GreenApiClient } from '@/lib/greenApi';
 import { makeId } from '@/lib/utils';
-import type { Chat } from '@/types/chat';
+import type { Chat, RemoteChat } from '@/types/chat';
 
 export function useChats(client: GreenApiClient | null) {
   const [chats, setChats] = useLocalStorage<Chat[]>('chats', []);
@@ -118,6 +118,44 @@ export function useChats(client: GreenApiClient | null) {
     [],
   );
 
+  const mergeRemoteChats = useCallback((remoteChats: RemoteChat[]) => {
+    if (!remoteChats.length) return;
+
+    const now = Date.now();
+    const seen = new Set<string>();
+
+    setChats((current) => {
+      const byChatId = new Map(current.map((chat) => [chat.chatId, chat]));
+      const merged: Chat[] = [];
+
+      for (const remote of remoteChats) {
+        const chatId = remote.id?.trim();
+        if (!chatId || seen.has(chatId)) continue;
+        seen.add(chatId);
+
+        const existing = byChatId.get(chatId);
+        if (existing) {
+          byChatId.delete(chatId);
+          const remoteName = remote.name?.trim();
+          const keepLocalTitle = existing.title !== existing.chatId || !remoteName;
+          merged.push(keepLocalTitle ? existing : { ...existing, title: remoteName });
+          continue;
+        }
+
+        merged.push({
+          id: makeId(),
+          chatId,
+          title: remote.name?.trim() || chatId,
+          createdAt: now,
+          updatedAt: now,
+          colorIndex: randomAvatarColorIndex(),
+        });
+      }
+
+      return [...merged, ...byChatId.values()];
+    });
+  }, []);
+
   return {
     chats,
     activeChat,
@@ -128,5 +166,6 @@ export function useChats(client: GreenApiClient | null) {
     removeChat,
     touchChat,
     upsertIncomingChat,
+    mergeRemoteChats,
   };
 }

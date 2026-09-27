@@ -27,6 +27,15 @@ export type Chat = {
   colorIndex?: number;
 };
 
+export type RemoteChat = {
+  id: string;
+  name?: string;
+  type?: 'user' | 'group' | string;
+  archive?: boolean;
+  unreadCount?: number;
+  newChatId?: string;
+};
+
 export type InstanceStateResponse = {
   stateInstance?: string;
 };

@@ -50,7 +50,7 @@ their meaning.
 
 Outgoing messages have a lifecycle:
 
-` sending -> sent -> delivered/read `
+`sending -> sent -> delivered/read`
 
 `sendMessage` acknowledgement is responsible for the transition to `sent`.
 Delivery/read status comes from the corresponding GREEN-API event.
