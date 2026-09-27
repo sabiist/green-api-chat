@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-primary: #008235;
+  --color-primary-foreground: #ffffff;
+  --color-primary-dark: #026630;
+  --color-primary-light: #cfefdf;
+  --color-primary-lighter: #e9f8f0;
+  --color-success: #00a63e;
+
+  --color-destructive: #c43d3d;
+  --color-destructive-foreground: #ffffff;
+  --color-destructive-dark: #a83232;
+  --color-destructive-soft: #fbeaea;
+  --color-destructive-border: #f3caca;
+
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-border: #ebebeb;
+  --color-input: #cbd5e1;
+  --color-ring: #008235;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  button:not(:disabled),
+  a[href],
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+.modal-panel {
+  animation: modal-in 180ms ease-out;
+}
+
+.no-marker::-webkit-details-marker {
+  display: none;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

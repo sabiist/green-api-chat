@@ -1,0 +1,14 @@
+# Build output
+dist
+build
+
+# Dependencies
+node_modules
+
+# Lockfiles
+pnpm-lock.yaml
+
+# Env / misc
+*.log
+.vscode
+.idea
