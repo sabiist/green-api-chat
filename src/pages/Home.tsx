@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeftRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 import logoUrl from '@/assets/header-logo.svg';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { ChatList } from '@/components/chat/ChatList';
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { LoginPanel } from '@/components/chat/LoginPanel';

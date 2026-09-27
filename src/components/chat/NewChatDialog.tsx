@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog';
 import { inputClass, labelClass, primaryButtonClass } from '@/lib/controls';
 
 type Props = {

@@ -1,6 +1,6 @@
 import { EllipsisVertical } from 'lucide-react';
 
-import { Menu, MenuContent, MenuItem, MenuTrigger } from '@/components/ui/menu';
+import { Menu, MenuContent, MenuItem, MenuTrigger } from '@/components/ui/Menu';
 import { avatarColorFor } from '@/lib/avatarColors';
 import { menuButtonClass } from '@/lib/controls';
 import { formatDate } from '@/lib/format';

@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog';
 import { inputClass, labelClass, primaryButtonClass } from '@/lib/controls';
 import type { Chat } from '@/types/chat';
 
