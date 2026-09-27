@@ -27,13 +27,14 @@ function initials(title: string) {
   );
 }
 
-function ChatAvatar({ chat, active }: { chat: Chat; active: boolean }) {
+function ChatAvatar({ chat }: { chat: Chat }) {
   const color = avatarColorFor(chat.chatId, chat.colorIndex);
   return (
     <div
       className={cx(
         'flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold',
-        active ? 'bg-white/20 text-white' : `${color.bg} ${color.text}`,
+        color.bg,
+        color.text,
       )}
     >
       {initials(chat.title)}
@@ -66,7 +67,7 @@ export function ChatList({ chats, activeChatId, collapsed, onSelect, onRename, o
                 active ? 'bg-primary shadow-sm' : 'hover:bg-primary-light',
               )}
             >
-              <ChatAvatar chat={chat} active={active} />
+              <ChatAvatar chat={chat} />
             </button>
           );
         })}
@@ -91,7 +92,7 @@ export function ChatList({ chats, activeChatId, collapsed, onSelect, onRename, o
               onClick={() => onSelect(chat.id)}
               className="flex min-w-0 flex-1 items-center gap-3 rounded-l-lg px-3 py-3 text-left"
             >
-              <ChatAvatar chat={chat} active={active} />
+              <ChatAvatar chat={chat} />
               <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div className="truncate text-sm font-medium">{chat.title}</div>
