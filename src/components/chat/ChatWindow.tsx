@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { Check, CheckCheck, Clock, CircleAlert, Info } from 'lucide-react';
+import { Check, CheckCheck, Clock, CircleAlert, Info, X } from 'lucide-react';
 
 import { avatarColorFor } from '@/lib/avatarColors';
 import { textareaClass } from '@/lib/controls';
@@ -39,7 +39,9 @@ function StatusIcon({ status }: { status?: ChatMessage['status'] }) {
 
 export function ChatWindow({ chat, messages, sending, error, onSend }: Props) {
   const [text, setText] = useState('');
+  const [dismissedError, setDismissedError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const visibleError = error && error !== dismissedError ? error : null;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -147,9 +149,17 @@ export function ChatWindow({ chat, messages, sending, error, onSend }: Props) {
       </div>
 
       <form className="border-t bg-white p-4" onSubmit={submit}>
-        {error ? (
-          <div className="text-destructive-dark border-destructive-border bg-destructive-soft mb-3 rounded-md border px-3 py-2 text-sm">
-            {error}
+        {visibleError ? (
+          <div className="text-destructive-dark border-destructive-border bg-destructive-soft mb-3 flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm">
+            <span>{visibleError}</span>
+            <button
+              type="button"
+              onClick={() => setDismissedError(visibleError)}
+              className="hover:bg-destructive-border/50 text-destructive-dark -mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded-sm transition"
+              aria-label="Закрыть"
+            >
+              <X className="size-4" />
+            </button>
           </div>
         ) : null}
         <div className="relative">
