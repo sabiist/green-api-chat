@@ -47,11 +47,17 @@ export class GreenApiClient {
     return `${this.credentials.apiUrl}/waInstance${this.credentials.idInstance}`;
   }
 
-  private async request<T>(method: string, path: string, body?: unknown): Promise<T> {
+  private async request<T>(
+    method: string,
+    path: string,
+    body?: unknown,
+    signal?: AbortSignal,
+  ): Promise<T> {
     const response = await fetch(`${this.instanceBase()}${path}`, {
       method,
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
+      signal,
     });
 
     const raw = await response.text();
@@ -99,11 +105,13 @@ export class GreenApiClient {
     );
   }
 
-  getChats(count?: number) {
+  getChats(count?: number, signal?: AbortSignal) {
     const query = count ? `?count=${count}` : '';
     return this.request<RemoteChat[]>(
       'GET',
       `/getChats/${this.credentials.apiTokenInstance}${query}`,
+      undefined,
+      signal,
     );
   }
 

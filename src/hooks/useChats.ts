@@ -121,11 +121,11 @@ export function useChats(client: GreenApiClient | null) {
     if (!remoteChats.length) return;
 
     const now = Date.now();
-    const seen = new Set<string>();
 
     setChats((current) => {
       const byChatId = new Map(current.map((chat) => [chat.chatId, chat]));
       const merged: Chat[] = [];
+      const seen = new Set<string>();
 
       for (const remote of remoteChats) {
         const chatId = (remote.chatId ?? remote.id)?.trim();

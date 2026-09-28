@@ -13,6 +13,7 @@ import { useCredentials } from '@/hooks/useCredentials';
 import { useGreenApiPolling } from '@/hooks/useGreenApiPolling';
 import { useMessages } from '@/hooks/useMessages';
 import { useSidebar } from '@/hooks/useSidebar';
+import { GreenApiError } from '@/lib/greenApi';
 import { errorMessage, makeId, normalizeOutgoingStatus } from '@/lib/utils';
 import type { Chat, ChatMessage, IncomingNotification } from '@/types/chat';
 
@@ -147,42 +148,55 @@ export default function Home() {
   useEffect(() => {
     if (!client) return;
 
-    let cancelled = false;
-    client
-      .getChats()
-      .then((remoteChats) => {
-        if (!cancelled) mergeRemoteChats(remoteChats);
-      })
-      .catch((error) => {
-        if (!cancelled) setChatError(errorMessage(error));
-      });
+    let disposed = false;
+    const maxAttempts = 4;
+
+    const load = (attempt = 0) => {
+      client
+        .getChats()
+        .then((remoteChats) => {
+          mergeRemoteChats(remoteChats);
+        })
+        .catch((error) => {
+          if (disposed) return;
+
+          if (error instanceof GreenApiError && error.status === 429 && attempt < maxAttempts) {
+            window.setTimeout(
+              () => {
+                if (!disposed) load(attempt + 1);
+              },
+              Math.min(1000 * 2 ** attempt, 8000),
+            );
+            return;
+          }
+
+          setChatError(errorMessage(error));
+        });
+    };
+
+    load();
 
     return () => {
-      cancelled = true;
+      disposed = true;
     };
   }, [client, mergeRemoteChats]);
 
   useEffect(() => {
-    if (!client || !activeChat) return;
+    const chatId = activeChat?.chatId;
+    if (!client || !chatId) return;
 
-    const chatId = activeChat.chatId;
     if (historyLoadedRef.current.has(chatId)) return;
     historyLoadedRef.current.add(chatId);
 
-    let cancelled = false;
     client
       .getChatHistory(chatId)
       .then((history) => {
-        if (!cancelled) mergeHistory(chatId, history);
+        mergeHistory(chatId, history);
       })
       .catch(() => {
         historyLoadedRef.current.delete(chatId);
       });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [client, activeChat, mergeHistory]);
+  }, [client, activeChat?.chatId, mergeHistory]);
 
   const handleLogout = () => {
     setChatError(null);
